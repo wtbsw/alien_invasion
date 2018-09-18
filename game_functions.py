@@ -16,9 +16,12 @@ def check_keydown_events(event, ai_settings, screen, stats, ship, aliens, bullet
         # Create a new bullet and add it to the bullets group.
         fire_bullet(ai_settings, screen, ship, bullets)
     elif event.key == pygame.K_q:
+        if stats.score >= stats.high_score:
+            with open('high_score.txt', 'w') as f:
+                f.write(str(stats.score))
         sys.exit()
     elif event.key == pygame.K_p:
-        # quit the game
+        # begin the game
         start_game(ai_settings, screen, stats, ship, aliens, bullets)
 
 
@@ -42,8 +45,9 @@ def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bull
     """Respond to keypresses and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            with open('high_score.txt', 'w') as f:
-                f.write(stats.high_score)
+            if stats.score > stats.high_score:
+                with open('high_score.txt', 'w') as f:
+                    f.write(str(stats.high_score))
             sys.exit()
         elif event.type == pygame.KEYDOWN:
             check_keydown_events(event, ai_settings, screen, stats, ship, aliens, bullets)
@@ -266,7 +270,7 @@ def update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets):
     # Look for aliens hitting the bottom of the screen.
     check_aliens_bottom(ai_settings, screen, stats, sb, ship, aliens, bullets)
 
-
+             
 def check_high_score(stats, sb):
     """Check to see if there's a new high score."""
     if stats.score > stats.high_score:
